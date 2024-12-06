@@ -2,11 +2,6 @@ package de.akquinet.jkl.aoc24
 
 import io.kotest.matchers.shouldBe
 
-private fun <A, B> combineAll(someList: Iterable<A>, otherList: Iterable<B>): List<Pair<A, B>> =
-  someList.flatMap { a -> otherList.map { b -> a to b } }
-
-private typealias IntPair = Pair<Int, Int>
-
 private fun fourRight(i: Int, j: Int): List<IntPair> =
   listOf(i to j, i to j + 1, i to j + 2, i to j + 3)
 
