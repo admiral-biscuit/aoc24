@@ -2,55 +2,30 @@ package de.akquinet.jkl.aoc24
 
 import io.kotest.matchers.shouldBe
 
-private data class CityMap(val width: Int, val height: Int, val data: Map<IntPair, Char>) {
-  val antennaLabels = data.values.toSet()
-  val antiNodes = mutableSetOf<IntPair>()
+data class Antenna(val point: Point, val char: Char)
 
-  fun antennasByChar(char: Char): List<IntPair> =
-    data.filterValues { it == char }.toList().map { it.first }
-
-  fun isInBounds(position: IntPair): Boolean =
-    position.first in 0..<height && position.second in 0..<width
-
-  fun putAntinodeAt(position: IntPair) {
-    antiNodes.add(position)
-  }
+private data class CityMap(val dimension: Dimension, val data: List<Antenna>) {
+  val antinodes = mutableSetOf<Point>()
 }
 
-private fun <A> List<A>.allPairs(): List<Pair<A, A>> =
-  flatMapIndexed { i, first -> mapIndexed { j, second -> if (i < j) first to second else null } }
-    .filterNotNull()
-
-private fun Pair<IntPair, IntPair>.maxTwoAntinodes(cityMap: CityMap): List<IntPair> {
+private fun Pair<Point, Point>.antinodes(dimension: Dimension, tRange: Iterable<Int>): List<Point> {
   val (node1, node2) = this
+  val delta = node1 minus node2
 
-  val di = node1.first - node2.first
-  val dj = node1.second - node2.second
+  val result = mutableListOf<Point>()
+  val iterator = tRange.iterator()
 
-  val antiNode1 = node1.first + di to node1.second + dj
-  val antiNode2 = node2.first - di to node2.second - dj
+  while (iterator.hasNext()) {
+    val t = iterator.next()
 
-  return listOf(antiNode1, antiNode2).filter { cityMap.isInBounds(it) }
-}
+    val antinode1 = node1.plus(delta.scaleBy(t))
+    val antinode2 = node2.minus(delta.scaleBy(t))
 
-private fun Pair<IntPair, IntPair>.allAntinodes(cityMap: CityMap): List<IntPair> {
-  val (node1, node2) = this
-  val di = node1.first - node2.first
-  val dj = node1.second - node2.second
+    val antinodes = listOf(antinode1, antinode2).filter { point -> dimension containsPoint point }
 
-  val result = mutableListOf<IntPair>()
-  var t = 0
+    if (antinodes.isEmpty()) break
 
-  while (true) {
-    val antiNode1 = node1.first + t * di to node1.second + t * dj
-    val antiNode2 = node2.first - t * di to node2.second - t * dj
-
-    val antiNodes = listOf(antiNode1, antiNode2).filter { cityMap.isInBounds(it) }
-
-    if (antiNodes.isEmpty()) break
-
-    result.addAll(antiNodes)
-    t += 1
+    result.addAll(antinodes)
   }
 
   return result
@@ -61,44 +36,42 @@ class Puzzle8 :
     8,
     {
       val lines = readInputAsLines()
+      val dimension = Dimension(width = lines.first().length, height = lines.size)
 
       val cityMap =
         CityMap(
-          width = lines.first().length,
-          height = lines.size,
+          dimension = dimension,
           data =
             lines
-              .mapIndexed { i, row -> row.mapIndexed { j, char -> Pair(i, j) to char } }
-              .flatten()
-              .toMap()
-              .filterValues { char -> char != '.' },
+              .flatMapIndexed { i, row ->
+                row.mapIndexed { j, char ->
+                  val point = Point(i, j)
+                  Antenna(point, char).takeIf { char != '.' }
+                }
+              }
+              .filterNotNull(),
         )
 
-      fun solvePuzzleFor(
-        cityMap: CityMap,
-        antiNodeStrategy: Pair<IntPair, IntPair>.(CityMap) -> List<IntPair>,
-      ): Int {
-        val cm = cityMap.copy()
-
-        cm.antennaLabels.forEach { char ->
-          val antennaPositions = cm.antennasByChar(char)
-          val antennaPairs = antennaPositions.allPairs()
-          antennaPairs.forEach { nodes ->
-            val antiNodes = nodes.antiNodeStrategy(cm)
-            antiNodes.toList().forEach { antiNode -> cm.putAntinodeAt(antiNode) }
+      fun solvePuzzleFor(tRange: Iterable<Int>): Int {
+        with(cityMap.copy()) {
+          data.forEach { antenna ->
+            val pointsForChar = data.filter { it.char == antenna.char }.map { it.point }
+            val pointPairs = pointsForChar.allPairs()
+            pointPairs.forEach { pointPair ->
+              antinodes.addAll(pointPair.antinodes(dimension, tRange))
+            }
           }
+          return antinodes.size
         }
-
-        return cm.antiNodes.size
       }
 
       test(PART_ONE) {
-        val solution1 = solvePuzzleFor(cityMap, Pair<IntPair, IntPair>::maxTwoAntinodes)
+        val solution1 = solvePuzzleFor(tRange = listOf(1))
         solution1 shouldBe 247
       }
 
       test(PART_TWO) {
-        val solution2 = solvePuzzleFor(cityMap, Pair<IntPair, IntPair>::allAntinodes)
+        val solution2 = solvePuzzleFor(tRange = 0..<Int.MAX_VALUE)
         solution2 shouldBe 861
       }
     },
