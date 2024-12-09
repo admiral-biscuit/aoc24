@@ -2,7 +2,8 @@ package de.akquinet.jkl.aoc24
 
 import io.kotest.matchers.shouldBe
 
-fun <T> T.toList(repetitions: Int): List<T> = generateSequence { this }.take(repetitions).toList()
+private fun <T> T.repeat(repetitions: Int): List<T> =
+  generateSequence { this }.take(repetitions).toList()
 
 private sealed interface DiskEntry {
   @JvmInline value class Number(val value: Int) : DiskEntry
@@ -18,7 +19,7 @@ private fun String.toDiskEntries(): List<DiskEntry> =
       } else {
         DiskEntry.Empty
       }
-      .toList(digit)
+      .repeat(digit)
   }
 
 private data class Disk(val entries: MutableList<DiskEntry>) {
