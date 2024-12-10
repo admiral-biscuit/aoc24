@@ -7,7 +7,7 @@ private data class LinkedPoint(val coords: Point, val height: Int, val next: Lis
     if (next.isEmpty() && height == 9) {
       listOf(this)
     } else {
-      next.flatMap { it.ends() }.toList()
+      next.flatMap { it.ends() }
     }
 }
 
