@@ -2,7 +2,7 @@ package de.akquinet.jkl.aoc24
 
 import io.kotest.matchers.shouldBe
 
-data class Antenna(val point: Point, val char: Char)
+private data class Antenna(val point: Point, val char: Char)
 
 private data class CityMap(val dimension: Dimension, val data: List<Antenna>) {
   val antinodes = mutableSetOf<Point>()
