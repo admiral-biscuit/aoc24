@@ -4,17 +4,16 @@ import de.akquinet.jkl.aoc24.utils.applyRepeatedly
 import de.akquinet.jkl.aoc24.utils.countEachElement
 import io.kotest.matchers.shouldBe
 
-private fun replaceStone(number: Long, memo: MutableMap<Long, List<Long>>): List<Long> =
-  memo.getOrPut(number) {
-    val ns = number.toString()
+private fun replaceStone(number: Long): List<Long> {
+  val ns = number.toString()
 
-    when {
-      number == 0L -> listOf(1L)
-      ns.length % 2 == 0 ->
-        listOf(ns.substring(0, ns.length / 2), ns.substring(ns.length / 2)).map { it.toLong() }
-      else -> listOf(2024L * number)
-    }
+  return when {
+    number == 0L -> listOf(1L)
+    ns.length % 2 == 0 ->
+      listOf(ns.substring(0, ns.length / 2), ns.substring(ns.length / 2)).map { it.toLong() }
+    else -> listOf(2024L * number)
   }
+}
 
 class Puzzle11 :
   PuzzleSpec(
@@ -22,15 +21,13 @@ class Puzzle11 :
     {
       val stoneNumbers = readInputAsText().split(" ").map { it.toLong() }
 
-      fun solvePuzzle(numberOfBlinks: Int): Long {
-        val memo = mutableMapOf<Long, List<Long>>()
-
-        return stoneNumbers
+      fun solvePuzzle(numberOfBlinks: Int): Long =
+        stoneNumbers
           .countEachElement()
           .applyRepeatedly(numberOfBlinks) { oldStonesWithCount ->
             val newStonesWithCount = mutableMapOf<Long, Long>()
             oldStonesWithCount.forEach { (oldStone, oldCount) ->
-              val newStones = replaceStone(oldStone, memo)
+              val newStones = replaceStone(oldStone)
               newStones.forEach { newStone ->
                 newStonesWithCount[newStone] =
                   newStonesWithCount.getOrDefault(newStone, 0L) + oldCount
@@ -40,7 +37,6 @@ class Puzzle11 :
           }
           .values
           .sum()
-      }
 
       test(PART_ONE) {
         val solution1 = solvePuzzle(25)
