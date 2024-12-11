@@ -1,5 +1,7 @@
 package de.akquinet.jkl.aoc24
 
+import de.akquinet.jkl.aoc24.utils.Dimension
+import de.akquinet.jkl.aoc24.utils.Point
 import io.kotest.matchers.shouldBe
 
 private data class LinkedPoint(val coords: Point, val height: Int, val next: List<LinkedPoint>) {

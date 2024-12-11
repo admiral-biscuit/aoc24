@@ -1,5 +1,6 @@
 package de.akquinet.jkl.aoc24
 
+import de.akquinet.jkl.aoc24.utils.IntPair
 import io.kotest.matchers.shouldBe
 
 private enum class Field(val char: Char) {

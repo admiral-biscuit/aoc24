@@ -1,5 +1,7 @@
 package de.akquinet.jkl.aoc24
 
+import de.akquinet.jkl.aoc24.utils.IntPair
+import de.akquinet.jkl.aoc24.utils.combineAll
 import io.kotest.matchers.shouldBe
 
 private fun fourRight(i: Int, j: Int): List<IntPair> =

@@ -1,5 +1,8 @@
 package de.akquinet.jkl.aoc24
 
+import de.akquinet.jkl.aoc24.utils.Dimension
+import de.akquinet.jkl.aoc24.utils.Point
+import de.akquinet.jkl.aoc24.utils.allPairs
 import io.kotest.matchers.shouldBe
 
 private data class Antenna(val point: Point, val char: Char)

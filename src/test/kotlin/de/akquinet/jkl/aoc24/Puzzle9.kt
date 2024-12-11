@@ -1,5 +1,6 @@
 package de.akquinet.jkl.aoc24
 
+import de.akquinet.jkl.aoc24.utils.whileTrue
 import io.kotest.matchers.shouldBe
 
 private fun <T> T.repeat(repetitions: Int): List<T> =
