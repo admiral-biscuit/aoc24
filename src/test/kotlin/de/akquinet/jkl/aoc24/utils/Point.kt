@@ -7,8 +7,9 @@ data class Point(val x: Int, val y: Int) {
 
   fun scaleBy(t: Int): Point = Point(t * x, t * y)
 
+  fun neighbours(): List<Point> =
+    listOf(Point(x, y + 1), Point(x + 1, y), Point(x, y - 1), Point(x - 1, y))
+
   fun neighbours(dimension: Dimension): List<Point> =
-    listOf(Point(x, y + 1), Point(x + 1, y), Point(x, y - 1), Point(x - 1, y)).filter { point ->
-      dimension containsPoint point
-    }
+    neighbours().filter { point -> dimension containsPoint point }
 }
