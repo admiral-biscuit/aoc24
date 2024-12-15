@@ -1,24 +1,17 @@
 package de.akquinet.jkl.aoc24
 
+import arrow.fx.coroutines.parMap
 import de.akquinet.jkl.aoc24.utils.Point
 import de.akquinet.jkl.aoc24.utils.combineAll
 import io.kotest.matchers.shouldBe
-
-infix fun Int.positiveMod(other: Int): Int {
-  val mod = this % other
-  return if (mod < 0) {
-    mod + other
-  } else {
-    mod
-  }
-}
+import kotlinx.coroutines.Dispatchers
 
 private data class Robot(val position: Point, val velocity: Point) {
   fun move(t: Int = 1): Robot = copy(position = position plus velocity.scaleBy(t))
 
   fun modPosition(width: Int, height: Int): Robot {
-    val xMod = position.x positiveMod width
-    val yMod = position.y positiveMod height
+    val xMod = position.x.mod(width)
+    val yMod = position.y.mod(height)
     return copy(position = Point(xMod, yMod))
   }
 }
@@ -78,23 +71,35 @@ class Puzzle14 :
       }
 
       test(PART_TWO) {
-        val interestingIndex: Int
-        var index = 0
+        val interestingIndex =
+          (0..<10304)
+            .parMap(Dispatchers.IO) { t ->
+              val robots =
+                initialRobots.map { robot -> robot.move(t).modPosition(mapWidth, mapHeight) }
+              val render = robots.render(mapWidth, mapHeight)
+              render.mightBeInteresting()
+            }
+            .indexOfFirst { it }
+
+        interestingIndex shouldBe 8087
+      }
+
+      // The number of all possible map states is 101 * 103 = 10403.
+      // This follows from Lagrange's theorem.
+      test("all possible map states") {
+        val mapStates = mutableListOf<String>()
         var robots = initialRobots
 
         while (true) {
           val render = robots.render(mapWidth, mapHeight)
 
-          if (render.mightBeInteresting()) {
-            interestingIndex = index
-            break
-          }
+          if (render in mapStates) break
+          mapStates.add(render)
 
-          index += 1
           robots = robots.map { robot -> robot.move().modPosition(mapWidth, mapHeight) }
         }
 
-        interestingIndex shouldBe 8087
+        mapStates.size shouldBe 10403
       }
     },
   )
