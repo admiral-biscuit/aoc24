@@ -6,25 +6,23 @@ import de.akquinet.jkl.aoc24.utils.PathSearchable
 import de.akquinet.jkl.aoc24.utils.Point
 import io.kotest.assertions.arrow.core.shouldBeRight
 import io.kotest.matchers.shouldBe
-import kotlin.math.abs
 import kotlinx.coroutines.Dispatchers
 
 private data class MemorySpace(val dimension: Dimension, val corruptedPoints: List<Point>) :
   PathSearchable<Point> {
-  override fun distance(node1: Point, node2: Point): Int =
-    (node1 minus node2).let { (x, y) -> abs(x) + abs(y) }
+  override fun distance(node1: Point, node2: Point): Int = node1 manhattanDistance node2
 
   override fun neighbours(node: Point): List<Point> =
     node.neighbours(dimension).filter { it !in corruptedPoints }
 
   // debug
   @Suppress("UNUSED")
-  fun render(visited: List<Point> = emptyList()): String =
+  fun render(path: List<Point> = emptyList()): String =
     (0..<dimension.height).joinToString("\n") { y ->
       (0..<dimension.width).joinToString("") { x ->
         when (Point(x, y)) {
           in corruptedPoints -> "#"
-          in visited -> "O"
+          in path -> "O"
           else -> "."
         }
       }

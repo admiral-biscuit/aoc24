@@ -1,5 +1,7 @@
 package de.akquinet.jkl.aoc24.utils
 
+import kotlin.math.abs
+
 data class Point(val x: Int, val y: Int) {
   infix fun plus(other: Point): Point = Point(x + other.x, y + other.y)
 
@@ -12,4 +14,7 @@ data class Point(val x: Int, val y: Int) {
 
   fun neighbours(dimension: Dimension): List<Point> =
     neighbours().filter { point -> dimension containsPoint point }
+
+  infix fun manhattanDistance(other: Point): Int =
+    (this minus other).let { (x, y) -> abs(x) + abs(y) }
 }
