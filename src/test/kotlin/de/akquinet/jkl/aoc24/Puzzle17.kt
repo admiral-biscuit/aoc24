@@ -1,12 +1,7 @@
 package de.akquinet.jkl.aoc24
 
+import de.akquinet.jkl.aoc24.utils.pow
 import io.kotest.matchers.shouldBe
-
-private infix fun Long.pow(exponent: Long): Long {
-  var result = 1L
-  (1..exponent).forEach { _ -> result *= this }
-  return result
-}
 
 private enum class ThreeBitInteger(val value: Int) {
   ZERO(0),
@@ -19,10 +14,14 @@ private enum class ThreeBitInteger(val value: Int) {
   SEVEN(7);
 
   companion object {
-    fun fromString(string: String): ThreeBitInteger =
-      ThreeBitInteger.entries.first { it.value == string.toInt() }
+    fun fromInt(int: Int): ThreeBitInteger = ThreeBitInteger.entries.first { it.value == int }
+
+    fun fromString(string: String): ThreeBitInteger = fromInt(string.toInt())
   }
 }
+
+private fun List<ThreeBitInteger>.toOutputString(): String =
+  joinToString(",") { it.value.toString() }
 
 private class ProgramRunner(
   val program: List<ThreeBitInteger>,
@@ -31,7 +30,7 @@ private class ProgramRunner(
   var regC: Long,
 ) {
   var instructionPointer = 0
-  val out = mutableListOf<Int>()
+  val out = mutableListOf<ThreeBitInteger>()
 
   fun runProgram(): String {
     while (instructionPointer < program.size - 1) {
@@ -41,7 +40,7 @@ private class ProgramRunner(
       instructionPointer += 2
     }
 
-    return out.joinToString(",")
+    return out.toOutputString()
   }
 
   private fun getInstruction(opCode: ThreeBitInteger): (ThreeBitInteger) -> Unit =
@@ -79,7 +78,7 @@ private class ProgramRunner(
   }
 
   private fun out(input: ThreeBitInteger) {
-    out.add(comboOperand(input).mod(8))
+    out.add(ThreeBitInteger.fromInt(comboOperand(input).mod(8)))
   }
 
   private fun bdv(input: ThreeBitInteger) {
@@ -117,6 +116,59 @@ class Puzzle17 :
         val programRunner = ProgramRunner(program, regA, regB, regC)
         val solution1 = programRunner.runProgram()
         solution1 shouldBe "2,3,4,7,5,7,3,0,7"
+      }
+
+      test("part two") {
+        // this is what the program actually does before jumping to the start again
+        fun step(a: Long, out: MutableList<ThreeBitInteger>): Long {
+          var b = a.mod(8L) xor 2L
+          val c = a / (2L pow b)
+          b = b xor c xor 7
+          out.add(ThreeBitInteger.fromInt(b.mod(8L).toInt()))
+          return a / 8L
+        }
+
+        // this is now the same as ProgramRunner(program, regA, regB, regC).runProgram()
+        fun runProgram(aInit: Long): List<ThreeBitInteger> {
+          val out = mutableListOf<ThreeBitInteger>()
+          var a = aInit
+          while (a != 0L) {
+            a = step(a, out)
+          }
+          return out.toList()
+        }
+
+        runProgram(regA).toOutputString() shouldBe "2,3,4,7,5,7,3,0,7"
+
+        // this is what we want as output
+        val targetOutput =
+          "2,4,1,2,7,5,4,3,0,3,1,7,5,5,3,0".split(",").map { ThreeBitInteger.fromString(it) }
+        val targetOutputReversed = targetOutput.reversed()
+
+        data class RegAValue(val value: Long, val previous: List<RegAValue>?) {
+          fun ends(): List<RegAValue> = previous?.flatMap { it.ends() } ?: listOf(this)
+        }
+
+        // we will now revert the process described by "step" recursively
+        fun possiblePreviousValues(a: Long, index: Int = 0): RegAValue {
+          if (index > targetOutputReversed.size - 1) return RegAValue(a, null)
+
+          val left = 8L * a
+          val right = 8L * (a + 1)
+          val previous =
+            (left..<right).filter {
+              it != 0L && runProgram(it).reversed()[index] == targetOutputReversed[index]
+            }
+
+          return RegAValue(a, previous.map { possiblePreviousValues(it, index + 1) })
+        }
+
+        // solve the puzzle
+        val allPossibleValues = possiblePreviousValues(0L)
+        val minRegA = allPossibleValues.ends().minOf { it.value }
+
+        runProgram(minRegA) shouldBe targetOutput
+        minRegA shouldBe 190384609508367L
       }
     },
   )
