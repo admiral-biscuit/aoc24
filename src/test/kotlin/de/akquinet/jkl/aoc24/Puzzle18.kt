@@ -4,7 +4,6 @@ import arrow.fx.coroutines.parMap
 import de.akquinet.jkl.aoc24.utils.Dimension
 import de.akquinet.jkl.aoc24.utils.ImplementsDijkstra
 import de.akquinet.jkl.aoc24.utils.Point
-import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.Dispatchers
 
@@ -46,7 +45,7 @@ class Puzzle18 :
 
       test("part one") {
         val memorySpace = MemorySpace(dimension, corruptedPoints.take(1024))
-        val solution1 = memorySpace.dijkstra(start)[end].shouldNotBeNull()
+        val solution1 = memorySpace.dijkstra(start)[end]
         solution1 shouldBe 320
       }
 

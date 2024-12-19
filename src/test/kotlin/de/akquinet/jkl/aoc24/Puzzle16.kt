@@ -72,11 +72,23 @@ class Puzzle16 :
 
       test("part one") {
         val startWithDirection = PointWithDirection(maze.start, Direction.EAST)
-        // the end point is only reachable from the left
         val endWithDirection = PointWithDirection(maze.end, Direction.EAST)
 
         val solution1 = maze.dijkstra(startWithDirection)[endWithDirection]
         solution1 shouldBe 98520
+      }
+
+      test("part two") {
+        val startWithDirection = PointWithDirection(maze.start, Direction.EAST)
+        val endWithDirection = PointWithDirection(maze.end, Direction.EAST)
+
+        val paths =
+          maze.dijkstraAllPaths(startWithDirection, endWithDirection).map { path ->
+            path.map { it.coords }.toSet()
+          }
+
+        val solution2 = paths.reduce { set1, set2 -> set1 union set2 }.size
+        solution2 shouldBe 609
       }
     },
   )
