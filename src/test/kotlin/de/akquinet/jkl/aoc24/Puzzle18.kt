@@ -2,15 +2,15 @@ package de.akquinet.jkl.aoc24
 
 import arrow.fx.coroutines.parMap
 import de.akquinet.jkl.aoc24.utils.Dimension
-import de.akquinet.jkl.aoc24.utils.PathSearchable
+import de.akquinet.jkl.aoc24.utils.ImplementsDijkstra
 import de.akquinet.jkl.aoc24.utils.Point
-import io.kotest.assertions.arrow.core.shouldBeRight
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.Dispatchers
 
 private data class MemorySpace(val dimension: Dimension, val corruptedPoints: List<Point>) :
-  PathSearchable<Point> {
-  override fun distance(node1: Point, node2: Point): Int = node1 manhattanDistance node2
+  ImplementsDijkstra<Point> {
+  override fun distanceBetweenNeighbours(node1: Point, node2: Point): Int = 1
 
   override fun neighbours(node: Point): List<Point> =
     node.neighbours(dimension).filter { it !in corruptedPoints }
@@ -46,10 +46,7 @@ class Puzzle18 :
 
       test("part one") {
         val memorySpace = MemorySpace(dimension, corruptedPoints.take(1024))
-
-        val shortestPath = memorySpace.aStarPath(start, end).shouldBeRight()
-        val solution1 = shortestPath.size - 1
-
+        val solution1 = memorySpace.dijkstra(start)[end].shouldNotBeNull()
         solution1 shouldBe 320
       }
 
@@ -59,9 +56,9 @@ class Puzzle18 :
             .parMap(Dispatchers.IO) { numberOfCorruptedPoints ->
               val memorySpace =
                 MemorySpace(dimension, corruptedPoints.take(numberOfCorruptedPoints))
-              numberOfCorruptedPoints to memorySpace.aStarPath(start, end)
+              numberOfCorruptedPoints to memorySpace.dijkstra(start)[end]
             }
-            .first { (_, path) -> path.isLeft() }
+            .first { (_, distance) -> distance == null }
             .first
 
         val solution2 = corruptedPoints[firstBlockingPoint - 1].let { (x, y) -> "$x,$y" }
