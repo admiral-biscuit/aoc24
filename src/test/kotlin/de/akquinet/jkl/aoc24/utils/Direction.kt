@@ -20,3 +20,5 @@ enum class Direction(val vector: Point) {
       WEST -> EAST
     }
 }
+
+infix fun Point.move(direction: Direction): Point = this plus direction.vector
