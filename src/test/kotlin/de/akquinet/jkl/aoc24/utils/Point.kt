@@ -9,6 +9,12 @@ data class Point(val x: Int, val y: Int) {
 
   fun scaleBy(t: Int): Point = Point(t * x, t * y)
 
+  fun square(t: Int): List<Point> {
+    val range = -t..t
+    val vectors = combineAll(range, range).map { (v, w) -> Point(v, w) }
+    return vectors.map { this plus it }
+  }
+
   fun neighbours(): List<Point> =
     listOf(Point(x, y + 1), Point(x + 1, y), Point(x, y - 1), Point(x - 1, y))
 
