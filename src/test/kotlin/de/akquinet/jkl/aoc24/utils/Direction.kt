@@ -19,6 +19,18 @@ enum class Direction(val vector: Point) {
       SOUTH -> NORTH
       WEST -> EAST
     }
+
+  fun toSymbol(): String =
+    when (this) {
+      NORTH -> "^"
+      EAST -> ">"
+      SOUTH -> "v"
+      WEST -> "<"
+    }
+
+  companion object {
+    fun getByVector(vector: Point): Direction = entries.first { it.vector == vector }
+  }
 }
 
 infix fun Point.move(direction: Direction): Point = this plus direction.vector
