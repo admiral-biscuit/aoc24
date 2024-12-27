@@ -20,12 +20,12 @@ enum class Direction(val vector: Point) {
       WEST -> EAST
     }
 
-  fun toSymbol(): String =
+  fun toChar(): Char =
     when (this) {
-      NORTH -> "^"
-      EAST -> ">"
-      SOUTH -> "v"
-      WEST -> "<"
+      NORTH -> '^'
+      EAST -> '>'
+      SOUTH -> 'v'
+      WEST -> '<'
     }
 
   companion object {
