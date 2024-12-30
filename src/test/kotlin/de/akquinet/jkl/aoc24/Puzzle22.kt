@@ -50,6 +50,7 @@ class Puzzle22 :
       test("part two") {
         val solution2 =
           sngs
+            .asSequence()
             .map { sng -> sng.changeWindows() }
             .reduce { counts1, counts2 -> counts1 mergeCounts counts2 }
             .maxOf { (_, count) -> count }
