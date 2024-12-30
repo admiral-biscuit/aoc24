@@ -9,3 +9,11 @@ fun <A> List<A>.allPairs(): List<Pair<A, A>> =
 
 fun <T> List<T>.countEachElement(): Map<T, Long> =
   groupingBy { it }.eachCount().mapValues { (_, count) -> count.toLong() }
+
+infix fun <T> Map<T, Int>.mergeCounts(other: Map<T, Int>): Map<T, Int> {
+  val result = this.toMutableMap()
+
+  other.forEach { (key, value) -> result[key] = result.getOrDefault(key, 0) + value }
+
+  return result.toMap()
+}
