@@ -3,7 +3,7 @@ package de.akquinet.jkl.aoc24
 import de.akquinet.jkl.aoc24.utils.mergeCounts
 import io.kotest.matchers.shouldBe
 
-data class SecretNumberGenerator(val seed: Long, val numberOfValues: Int) {
+private data class SecretNumberGenerator(val seed: Long, val numberOfValues: Int) {
   private fun mix(secretNumber: Long, value: Long): Long = secretNumber xor value
 
   private fun prune(secretNumber: Long): Long = secretNumber.mod(16777216L)
