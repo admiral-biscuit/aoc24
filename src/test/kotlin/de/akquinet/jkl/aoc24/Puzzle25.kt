@@ -44,7 +44,7 @@ class Puzzle25 :
         val locks = schematics.filterIsInstance<Schematic.Lock>()
 
         val solution1 = combineAll(keys, locks).count { (key, lock) -> key.fitsInto(lock) }
-        solution1 shouldBe 3
+        solution1 shouldBe 2840
       }
     },
   )
