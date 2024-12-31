@@ -68,12 +68,12 @@ class Puzzle8 :
         }
       }
 
-      test(PART_ONE) {
+      test("part one") {
         val solution1 = solvePuzzleFor(tRange = listOf(1))
         solution1 shouldBe 247
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val solution2 = solvePuzzleFor(tRange = 0..<Int.MAX_VALUE)
         solution2 shouldBe 861
       }

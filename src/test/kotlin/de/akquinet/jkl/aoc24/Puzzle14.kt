@@ -59,7 +59,7 @@ class Puzzle14 :
       val mapWidth = 101
       val mapHeight = 103
 
-      test(PART_ONE) {
+      test("part one") {
         val solution1 =
           initialRobots
             .map { robot -> robot.move(100).modPosition(mapWidth, mapHeight) }
@@ -70,7 +70,7 @@ class Puzzle14 :
         solution1 shouldBe 230172768
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val interestingIndex =
           (0..<10304)
             .parMap(Dispatchers.IO) { t ->

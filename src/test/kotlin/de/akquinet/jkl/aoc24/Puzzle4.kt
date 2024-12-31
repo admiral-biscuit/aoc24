@@ -31,7 +31,7 @@ class Puzzle4 :
           .takeIf { point -> coordinates.containsAll(point) }
           ?.joinToString("") { (ii, jj) -> lines[ii][jj].toString() }
 
-      test(PART_ONE) {
+      test("part one") {
         val solution1 =
           listOf(::fourRight, ::fourBottom, ::fourBottomRight, ::fourBottomLeft).sumOf { shape ->
             coordinates
@@ -42,7 +42,7 @@ class Puzzle4 :
         solution1 shouldBe 2336
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val solution2 =
           coordinates
             .mapNotNull { (i, j) -> wordForShape(i, j, ::crossAt) }

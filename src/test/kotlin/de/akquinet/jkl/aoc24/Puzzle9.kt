@@ -105,14 +105,14 @@ class Puzzle9 :
     {
       val diskEntries = readInputAsText().toDiskEntries()
 
-      test(PART_ONE) {
+      test("part one") {
         val disk = Disk(diskEntries.toMutableList())
         val solution1 = disk.apply { whileTrue { moveLastEntryForward() } }.checksum()
 
         solution1 shouldBe 6201130364722
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val disk = Disk(diskEntries.toMutableList())
         val solution2 = disk.apply { whileTrue { tryMoveLastBlockForward() } }.checksum()
 

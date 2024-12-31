@@ -104,7 +104,7 @@ class Puzzle6 :
         return guard
       }
 
-      test(PART_ONE) {
+      test("part one") {
         val guard = doGuardWalk(startingAt, room)
 
         // reuse for part 2
@@ -113,7 +113,7 @@ class Puzzle6 :
         guard.visited.size shouldBe 4826
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val solution2 =
           guardPath
             .asSequence() // memory

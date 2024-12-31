@@ -10,7 +10,7 @@ class Puzzle3 :
 
       val mulRegex = Regex("mul\\(([0-9]+),([0-9]+)\\)")
 
-      test(PART_ONE) {
+      test("part one") {
         val solution1 =
           mulRegex.findAll(input).sumOf {
             val (a, b) = it.destructured
@@ -20,7 +20,7 @@ class Puzzle3 :
         solution1 shouldBe 161289189
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val doRegex = Regex("do\\(\\)")
         val dontRegex = Regex("don't\\(\\)")
 

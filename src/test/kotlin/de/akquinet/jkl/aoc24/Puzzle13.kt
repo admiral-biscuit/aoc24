@@ -46,12 +46,12 @@ class Puzzle13 :
           ClawMachine(points[0], points[1], points[2])
         }
 
-      test(PART_ONE) {
+      test("part one") {
         val solution1 = clawMachines.mapNotNull { it.solve() }.sumOf { (x, y) -> 3 * x + y }
         solution1 shouldBe 36954L
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val solution2 =
           clawMachines
             .map {

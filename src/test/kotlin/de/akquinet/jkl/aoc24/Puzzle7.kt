@@ -45,14 +45,14 @@ class Puzzle7 :
           if (equationHolds) equation.lhs else 0
         }
 
-      test(PART_ONE) {
+      test("part one") {
         val baseOps = sequenceOf(plus, times)
         val solution1 = solvePuzzleForBaseOps(baseOps)
 
         solution1 shouldBe 6392012777720
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val concat: Operation = { x, y -> "$x$y".toLong() }
 
         val baseOps = sequenceOf(plus, times, concat)

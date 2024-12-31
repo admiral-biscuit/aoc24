@@ -15,7 +15,7 @@ class Puzzle1 :
           }
           .unzip()
 
-      test(PART_ONE) {
+      test("part one") {
         val firstColumnSorted = columns.first.sorted()
         val secondColumnSorted = columns.second.sorted()
         val solution1 = firstColumnSorted.zip(secondColumnSorted) { x, y -> abs(x - y) }.sum()
@@ -23,7 +23,7 @@ class Puzzle1 :
         solution1 shouldBe 3569916
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val (firstColumnSorted, secondColumnSorted) = columns
         val solution2 =
           firstColumnSorted.sumOf { x -> x * secondColumnSorted.count { y -> x == y } }

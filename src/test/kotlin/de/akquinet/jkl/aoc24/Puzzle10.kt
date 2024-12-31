@@ -50,12 +50,12 @@ class Puzzle10 :
             .map { point -> ascendingPathsFrom(point).ends() }
         }
 
-      test(PART_ONE) {
+      test("part one") {
         val solution1 = listOfEnds.sumOf { ends -> ends.toSet().count() }
         solution1 shouldBe 811
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val solution2 = listOfEnds.sumOf { ends -> ends.count() }
         solution2 shouldBe 1794
       }

@@ -45,14 +45,14 @@ class Puzzle5 :
       val pageUpdates =
         lines2.map { line -> PageUpdate(line.split(",").toList().map { it.toInt() }) }
 
-      test(PART_ONE) {
+      test("part one") {
         val solution1 =
           pageUpdates.filter { it.isCorrect(pageOrderingRules) }.sumOf { it.getMiddleNumber() }
 
         solution1 shouldBe 5948
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val solution2 =
           pageUpdates
             .filter { !it.isCorrect(pageOrderingRules) }

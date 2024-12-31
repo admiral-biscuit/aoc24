@@ -106,12 +106,12 @@ class Puzzle12 :
 
       val regions = plantMap.buildAllConnectedRegions()
 
-      test(PART_ONE) {
+      test("part one") {
         val solution1 = regions.sumOf { region -> region.area() * region.perimeter() }
         solution1 shouldBe 1424006
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val solution2 = regions.sumOf { region -> region.area() * region.countCorners() }
         solution2 shouldBe 858684
       }

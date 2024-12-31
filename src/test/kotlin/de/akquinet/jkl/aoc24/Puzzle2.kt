@@ -30,12 +30,12 @@ class Puzzle2 :
     {
       val numberLists = readInputAsLines().map { line -> line.split(" ").map { it.toInt() } }
 
-      test(PART_ONE) {
+      test("part one") {
         val solution1 = numberLists.count { it.isSafe() }
         solution1 shouldBe 432
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val solution2 = numberLists.count { it.canBeMadeSafe() }
         solution2 shouldBe 488
       }

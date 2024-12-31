@@ -38,12 +38,12 @@ class Puzzle11 :
           .values
           .sum()
 
-      test(PART_ONE) {
+      test("part one") {
         val solution1 = solvePuzzle(25)
         solution1 shouldBe 186996L
       }
 
-      test(PART_TWO) {
+      test("part two") {
         val solution2 = solvePuzzle(75)
         solution2 shouldBe 221683913164898L
       }
